@@ -1,24 +1,22 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var cors = require('cors')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors = require('cors');
 require('dotenv').config()
 require('./db/db.js')
 
+// Load routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var productsRouter = require('./routes/products');
 var customerRouter = require('./routes/customers');
-var quotationRouter = require('./routes/quotations');
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
-// app.get('/react-quotation/*', (req,res) => {
-//   res.sendFile(path.join(__dirname, 'public', 'react-quotation', 'index.html'));
-// })
+app.use(cors());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -28,18 +26,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
 
-//Plug router
- // root server
+// Plug routers
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 app.use('/customers',customerRouter);
-app.use('/quotations', quotationRouter);
-// app.use('/', indexRouter);
-app.get('*', (req,res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

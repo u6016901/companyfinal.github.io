@@ -1,3 +1,4 @@
+// ORM MongoDB Connectivity
 const mongoose = require('mongoose');
 
 //Set up default mongoose connection
