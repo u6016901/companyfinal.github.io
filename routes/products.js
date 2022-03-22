@@ -24,7 +24,7 @@ router.post("/", (req, res, next) => {
     code: data.code,
     name: data.name,
     price: data.price,
-    remainingStock: data.remainingStock,
+    remainingStock: data.remainingStock
   });
   product1.save((err, newInstance) => {
     if (err) {
@@ -36,11 +36,22 @@ router.post("/", (req, res, next) => {
   });
 });
 
+// router.delete("/", (req, res, next) => {
+//   const id = req.body._id;
+//   console.debug(id);
+//   Product.findByIdAndDelete(id, (err, doc) => {
+//     if (err) {
+//       console.error("Hey look, Error!", err);
+//       res.json(err);
+//     } else {
+//       res.status(200).json(doc);
+//     }
+//   });
+// });
+
 router.delete("/:id", (req, res, next) => {
-  const id = req.params["id"]; // use ID from the route parameter
-  // const id = req.body._id;
-  console.log("Delete this id ", id);
-  console.debug("Product ID to delete", id);
+  const id = req.params.id;
+  console.debug(id);
   Product.findByIdAndDelete(id, (err, doc) => {
     if (err) {
       console.error("Hey look, Error!", err);
@@ -51,15 +62,22 @@ router.delete("/:id", (req, res, next) => {
   });
 });
 
-// Update whole object or partially (PATCH)
 router.put("/", async (req, res, next) => {
   console.debug(req.body);
   const data = req.body;
-  const id = data._id;
-  delete data._id;
-  console.debug(data);
 
-  Product.findByIdAndUpdate(id, data, (err, doc) => {
+  // Product.findOneAndUpdate({ code: data.code }, data, (err, doc) => {
+  //   if (err) {
+  //     console.error("Hey look, Error!", err);
+  //     res.json(err);
+  //   } else {
+  //     res.status(200).json(doc);
+  //   }
+  // });
+  // or findOne(), set values, then save()
+
+  //update whole object or partially (PATCH)
+  Product.findByIdAndUpdate(data._id, data, {new: true},(err, doc) => {
     if (err) {
       console.error("Hey look, Error!", err);
       res.json(err);
@@ -68,4 +86,6 @@ router.put("/", async (req, res, next) => {
     }
   });
 });
+
+
 module.exports = router;
